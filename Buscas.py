@@ -11,7 +11,7 @@ def limpar_terminal():
 grafo = {}
 
 # Busca em profundidade
-def busca_dfs(grafo, atual, destino, caminho=None, visitados=None, custo=0):
+def busca_profundidade(grafo, atual, destino, caminho=None, visitados=None, custo=0):
     if caminho is None:
         caminho = [atual]
     if visitados is None:
@@ -23,7 +23,7 @@ def busca_dfs(grafo, atual, destino, caminho=None, visitados=None, custo=0):
 
     for vizinho, tempo in grafo.get(atual, []):
         if vizinho not in visitados:
-            resultado = busca_dfs(grafo, vizinho, destino, caminho + [vizinho], visitados, custo + tempo)
+            resultado = busca_profundidade(grafo, vizinho, destino, caminho + [vizinho], visitados, custo + tempo)
             if resultado:
                 return resultado
 
@@ -143,10 +143,10 @@ while True:
 
         # Caso Busca em Profundidade
         if escolha == 1:
-            resultado_dfs = busca_dfs(grafo, inicio, fim)
-            print("\nBusca em Profundidade (DFS):")
-            if resultado_dfs:
-                caminho, custo = resultado_dfs
+            resultado_profundidade = busca_profundidade(grafo, inicio, fim)
+            print("\nBusca em Profundidade:")
+            if resultado_profundidade:
+                caminho, custo = resultado_profundidade
                 print(" -> ".join(caminho))
                 print(f"Tempo total: {custo} minutos")
             else:
