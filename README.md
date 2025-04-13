@@ -1,5 +1,5 @@
 <h1 align="center">
-    <img src = "./imgs/Cidades2.png"/>
+    <img src = "./imgs/Cidades2.png" style="width: 50%;"/>
     <p> An Artificial-Intelligence Programming Project! 🧠💻 </p>
 </h1>
 
