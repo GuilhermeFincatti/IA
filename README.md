@@ -5,7 +5,7 @@
 
 ## 🚨 About
 
-This is a project who implements differents kind of Search applied in a graph, and compare them!
+This is a project who implements different kind of Search applied in a graph, and compare them!
 
 ## 🔨 Tools
 
