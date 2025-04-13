@@ -31,7 +31,7 @@ def busca_profundidade(grafo, atual, destino, caminho=None, visitados=None, cust
 
 
 # Busca em largura
-def busca_bfs(grafo, inicio, destino):
+def busca_largura(grafo, inicio, destino):
     fila = deque()
     fila.append(([inicio], 0))  # (caminho, custo total)
     visitados = set()
@@ -154,10 +154,10 @@ while True:
 
         # Caso Busca em Largura
         elif escolha == 2:
-            resultado_bfs = busca_bfs(grafo, inicio, fim)
-            print("\nBusca em Largura (BFS):")
-            if resultado_bfs:
-                caminho, custo = resultado_bfs
+            resultado_largura = busca_largura(grafo, inicio, fim)
+            print("\nBusca em Largura:")
+            if resultado_largura:
+                caminho, custo = resultado_largura
                 print(" -> ".join(caminho))
                 print(f"Tempo total: {custo} minutos")
             else:
