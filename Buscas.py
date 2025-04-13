@@ -13,16 +13,23 @@ grafo = {}
 
 # Busca em profundidade
 def busca_profundidade(grafo, atual, destino, caminho=None, visitados=None, custo=0):
+
+    # Primeiro chamada caminho = atual = inicio
     if caminho is None:
         caminho = [atual]
+    # Primeiro chamada cria conjunto para armazenar valores de visitados (set() elimina duplicatas)
     if visitados is None:
         visitados = set()
+
     visitados.add(atual)
 
+    # Condição de parada
     if atual == destino:
         return caminho, custo
 
+    # Para todos os vizinhos do nó atual
     for vizinho, tempo in grafo.get(atual, []):
+        # Recursão caso o vizinho nao tenha sido visitado, enviando novo caminho, novos visitados e somando o tempo ao custo (buscando profundamente)
         if vizinho not in visitados:
             resultado = busca_profundidade(grafo, vizinho, destino, caminho + [vizinho], visitados, custo + tempo)
             if resultado:
@@ -31,21 +38,30 @@ def busca_profundidade(grafo, atual, destino, caminho=None, visitados=None, cust
 
 # Busca em largura
 def busca_largura(grafo, inicio, destino):
+
+    # Fila com possibilidade de inserção e remoção tanto no início quanto no fim
     fila = deque()
-    fila.append(([inicio], 0))  # (caminho, custo total)
+    # (Caminho, Custo total)
+    fila.append(([inicio], 0))  
     visitados = set()
 
     while fila:
+        # Armazena (Caminho e Custo total) nas variáveis caminho e custo, retirando o primeiro elemento da fila
         caminho, custo = fila.popleft()
+        # # Armazena a ultima cidade da fila no nó atual, pois foi a última cidade visitada
         atual = caminho[-1]
 
+        # Condição de parada
         if atual == destino:
             return caminho, custo
 
         if atual not in visitados:
             visitados.add(atual)
+            # Pera todos os vizinhos do nó atual
             for vizinho, tempo in grafo.get(atual, []):
-                if vizinho not in caminho:  # Evita ciclos
+                # Evita ciclos
+                if vizinho not in caminho:  
+                    # Adiciona vizinhos que ainda nao tenham sidos visitados na fila para serem explorados depois
                     nova_rota = list(caminho)
                     nova_rota.append(vizinho)
                     fila.append((nova_rota, custo + tempo))
@@ -55,24 +71,32 @@ def busca_largura(grafo, inicio, destino):
 # Busca heuristica A*
 def busca_a_estrela(grafo, heuristica, inicio, destino):
     fila = []
-    heapq.heappush(fila, (heuristica.get(inicio, float('inf')), 0, [inicio]))  # (f = g + h, g, caminho)
-
+    # Cria uma min-heap que armazena os elementos da fila ordenados pelo menor valor de f, prioridade determinada pelo primeiro elemento da tupla
+    heapq.heappush(fila, (heuristica.get(inicio, float('inf')), 0, [inicio]))
     visitados = set()
 
     while fila:
+        # Armazena o nó com menor f nas variáveis, heappop() sempre tirará o primeiro elemento da fila, que neste caso é o menor
         f_total, custo_atual, caminho = heapq.heappop(fila)
+        # Armazena a ultima cidade da fila no nó atual
         atual = caminho[-1]
 
+        # Condição de parada
         if atual == destino:
             return caminho, custo_atual
 
+
         if atual not in visitados:
             visitados.add(atual)
+            # Para todos os vizinhos do nó atual
             for vizinho, custo in grafo.get(atual, []):
                 if vizinho not in visitados:
+                    # Calcula novo caminho, custo e sua heurística e em seguida 
                     novo_caminho = caminho + [vizinho]
                     novo_custo = custo_atual + custo
-                    f = novo_custo + heuristica.get(vizinho, float('inf'))
+                    # f(n) = g(n) + h(n)
+                    f = novo_custo + heuristica.get(vizinho, float('inf')) 
+                    # Insere na min-heap este novo caminho
                     heapq.heappush(fila, (f, novo_custo, novo_caminho))
     return None
 
@@ -92,7 +116,7 @@ while True:
     try:                                            
         origem, destino = bloqueio.split("-")
         # Tratamento de erro caso o nome de alguma cidade seja inválido ou caso a rota não exista
-        if (origem or destino) not in cidades:
+        if origem not in cidades or destino not in cidades: 
             print("Via inválida. Verifique a via digitada.")
             continue
         else:
@@ -115,7 +139,7 @@ while True:
     try:                                            
         origem, destino = obstruida.split("-")
         # Tratamento de erro caso o nome de alguma cidade seja inválido ou caso a rota não exista
-        if (origem or destino) not in cidades:
+        if origem not in cidades or destino not in cidades:
             print("Via inválida. Verifique a via digitada.")
             continue
         else:
@@ -132,7 +156,8 @@ for origem, destino, tempo in arestas:
     if (origem, destino) in vias_obstruidas or (destino, origem) in vias_obstruidas:
         transito = random.randint(10,30)
         tempo = tempo + transito
-        print(f"\nDevido às vias obstruídas as vias: {origem}-{destino} estão com novo tempo de: {tempo} minutos") # Impressao na terminal para interface ficar intuitiva
+        # Impressao na terminal para interface ficar intuitiva
+        print(f"\nDevido às vias obstruídas as vias de: {origem}-{destino} estão com novo tempo de: {tempo} minutos")
     grafo.setdefault(origem, []).append((destino, tempo))
     grafo.setdefault(destino, []).append((origem, tempo))
 
