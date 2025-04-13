@@ -2,6 +2,7 @@ from collections import deque
 from Dados import heuristica_AQA, heuristica_JAU, arestas, cidades
 import heapq
 import os
+import random
 
 # Função para limpar o terminal
 def limpar_terminal():
@@ -26,9 +27,7 @@ def busca_profundidade(grafo, atual, destino, caminho=None, visitados=None, cust
             resultado = busca_profundidade(grafo, vizinho, destino, caminho + [vizinho], visitados, custo + tempo)
             if resultado:
                 return resultado
-
     return None
-
 
 # Busca em largura
 def busca_largura(grafo, inicio, destino):
@@ -75,14 +74,15 @@ def busca_a_estrela(grafo, heuristica, inicio, destino):
                     novo_custo = custo_atual + custo
                     f = novo_custo + heuristica.get(vizinho, float('inf'))
                     heapq.heappush(fila, (f, novo_custo, novo_caminho))
-
     return None
 
 # Main
 vias_bloqueadas = []
-print("Deseja bloquear alguma via? (Ex: araraquara-sao_carlos). Digite 'ok' para continuar.")
+vias_obstruidas = []
 
 # Inserção das vias bloqueadas
+print("Deseja BLOQUEAR alguma via direta? (Ex: araraquara-sao_carlos). Digite 'ok' para continuar.")
+
 while True:
     bloqueio = input("\nVia bloqueada: ").strip().lower()
     if bloqueio == "ok":
@@ -100,21 +100,45 @@ while True:
     except ValueError:
         print("Formato inválido. Use o formato cidade1-cidade2.")
 
+# Limpando terminal
+limpar_terminal()
+
+# Inserção de vias obstruidas
+print("Deseja OBSTRUIR alguma via direta? (Ex: araraquara-sao_carlos). Digite 'ok' para continuar.")
+
+while True:
+    obstruida = input("\nVia obstruida: ").strip().lower()
+    if obstruida == "ok":
+        break
+
+    # Tratamento de erro caso o formato das cidades não tenham sido inseridas corretamente
+    try:                                            
+        origem, destino = obstruida.split("-")
+        # Tratamento de erro caso o nome de alguma cidade seja inválido ou caso a rota não exista
+        if (origem or destino) not in cidades:
+            print("Via inválida. Verifique a via digitada.")
+            continue
+        else:
+            vias_obstruidas.append((origem, destino))   # Adiciona par a lista de vias_bloqueadas
+    except ValueError:
+        print("Formato inválido. Use o formato cidade1-cidade2.")
 
 # Construindo grafo com custos
 for origem, destino, tempo in arestas:
     # Condição para não inserir as vias bloqueadas
     if (origem, destino) in vias_bloqueadas or (destino, origem) in vias_bloqueadas:    
         continue
+    # Condição para inserir transito nas vias, geração do transito randomicamente
+    if (origem, destino) in vias_obstruidas or (destino, origem) in vias_obstruidas:
+        transito = random.randint(10,30)
+        tempo = tempo + transito
+        print(f"\nDevido às vias obstruídas as vias: {origem}-{destino} estão com novo tempo de: {tempo} minutos") # Impressao na terminal para interface ficar intuitiva
     grafo.setdefault(origem, []).append((destino, tempo))
     grafo.setdefault(destino, []).append((origem, tempo))
 
-# Limpando terminal
-limpar_terminal()
-
 # Menu
 while True:
-    print("\t MENU")
+    print("\n\t MENU")
     print("0 - Sair")
     print("1 - Busca em profundidade")
     print("2 - Busca em largura")

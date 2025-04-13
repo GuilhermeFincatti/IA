@@ -1,5 +1,5 @@
 <h1 align="center">
-    <img src = "./imgs/Cidades2.png" style="width: 50%;"/>
+    <img src = "./imgs/Wallpaper.png" style="width: 50%;"/>
     <p> An Artificial-Intelligence Programming Project! 🧠💻 </p>
 </h1>
 
@@ -36,7 +36,7 @@ This is a project who implements differents kind of Search applied in a graph, a
 
 - Relatório: *Link para relatório*
 
-- Slides: * Link para slides*
+- Slides: *Link para slides*
 
 
 ## 👥 Project Owners
